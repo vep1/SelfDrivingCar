@@ -4,9 +4,9 @@
 #define FIRpin A0
 #define RIRpin A1
 #define Fmotor1 2
-#define Fmotor2 3
-#define Rmotor1 5
-#define Rmotor2 6
+#define Fmotor2 4
+#define Rmotor1 7
+#define Rmotor2 8
 #define model 1080
 
 //include motor states
@@ -17,8 +17,9 @@ bool propSS = false; //state for start/stop (propulsion)
 // initialize components
 SharpIR Fsensor = SharpIR(FIRpin, model); //front sensor
 SharpIR Rsensor = SharpIR(RIRpin, model); //rear sensor
-motor Fmotor = motor(Fmotor1, Fmotor2); //front motor (steering)
-motor Rmotor = motor(Rmotor1, Rmotor2); //rear motor (propulsion)
+motor Fmotor = motor(Fmotor1, Fmotor2, false); //front motor (steering)
+motor Rmotor = motor(Rmotor1, Rmotor2, true); //rear motor (propulsion)
+
  
 void setup() {
   // serial comm
@@ -36,10 +37,10 @@ void loop() {
   }
   else if (Freading <= 15 || Rreading <= 15){ //should switch directions
     propState = Rmotor.toggle(propState, propSS);
-    delay(500);
+    delay(200);
     steerSS = false;
     steerState = Fmotor.toggle(steerState, steerSS); //turn
-    delay(500);
+    delay(200);
     steerSS = true; //straighten steering orientation
     steerSS = Fmotor.toggle(steerState, steerSS);
     //Serial.println(2); //debugging
@@ -52,17 +53,17 @@ void loop() {
   Serial.print("  ");
   Serial.println(Rreading);*/
 
-  Serial.print(digitalRead(Fmotor1));
+  /*Serial.print(digitalRead(Fmotor1));
   Serial.print("  ");
   Serial.print(digitalRead(Fmotor2));
   Serial.print("  ");
-  Serial.println(steerSS);
+  Serial.println(steerSS);*/
 
-  /*Serial.print(digitalRead(Rmotor1));
+  Serial.print(digitalRead(Rmotor1));
   Serial.print("  ");
   Serial.print(digitalRead(Rmotor2));
   Serial.print("  ");
-  Serial.println(propSS);*/
+  Serial.println(propSS);
   
   delay(100); //can change later
 }
